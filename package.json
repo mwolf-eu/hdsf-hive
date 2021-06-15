@@ -1,6 +1,6 @@
 {
   "name": "hdsf-hive",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The Harvest Interactive Visualization Engine (Hive) is a thin layer approach to wrapping d3 and optionally various renderers to produce a graph or chart in SVG, canvas, or WebGL.",
   "main": "index.js",
   "scripts": {
