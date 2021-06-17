@@ -1,7 +1,7 @@
 # hdsf-hive
 Harvest Interactive Visualization Engine (Hive) is a thin visualization layer sitting on top of D3 which can optionally render to SVG, canvas, or WebGL.  Like d3, its focus is to provide a grammar of graphics by (mostly) drawing shapes rather than specific chart/graph types.  This is currently a frontend (browserified) only tool due to node ES6 dynamic module importing / building inconsistencies.
 
-[API Reference](docs/Hivev0.0.xAPIReference.html)
+[API Reference](https://mwolf-eu.github.io/hdsf-hive/Hivev0.0.xAPIReference.html)
 
 [Examples](https://github.com/mwolf-eu/hdsf-hive-examples)
 
