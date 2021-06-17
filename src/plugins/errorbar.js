@@ -71,7 +71,7 @@ Hive.Plugins.errorbar = class {
   */
   static getDefaults() {
     return {
-          frame:'chart center-container > view', whiskerLen:.3, y:0, min:0, max:0,
+          frame:'chart center-container > view', whiskerLen:.3, y0:0, y1:0,
           attr:{stroke:'black', 'stroke-width':1}
         }
   }
