@@ -36,12 +36,26 @@ Hive.Visualization = class extends Hive.Object {
     return this;
   }
 
+  /**
+  * Print a warning if an extent is derived at run-time.
+  *
+  * @param object Scale key
+  * @param object Derived extent
+  * @return none
+  */
   setTemplate(t,c) {
     this.v = {frames:this.templates[t](c?c:{})};
     return this;
   }
 
-  graph(cfg) {
+  /**
+  * Create a visualization.
+  *
+  * @param object Vis config
+  * @param object Font preloads
+  * @return none
+  */
+  graph(cfg, fonts) {
     let prekit = ["element", "data", "frames", "accessors"];
     let toolkit = ["logLevel", ...prekit, "draw"];
 
@@ -110,16 +124,34 @@ Hive.Visualization = class extends Hive.Object {
 		this.bootstrap(toolkit, promises, handlers);
 	}
 
+  /**
+  * Call the user supplied state change handler
+  *
+  * @param object Variable args.  The first is always the state enum.
+  * @return none
+  */
   sendStateChange(...args) {
     if (this.v.onStateChange)
       this.v.onStateChange(...args);
   }
 
+  /**
+  * Set a scaled accessor.
+  *
+  * @param object Accessor key
+  * @param object Accessor config
+  * @return none
+  */
   setAccessor(key, value) { // TODO: Don't resolve whole cfg every time
     this.v.accessors[key] = value;
     this.tk.accessors.resolveCfg(this.v.accessors);
   }
 
+  /**
+  * Return the graph id.
+  *
+  * @return graph id
+  */
   getGraphID() {
     return this.v.name;
   }
@@ -134,48 +166,105 @@ Hive.Visualization = class extends Hive.Object {
     this.tk.frames.destroy();
   }
 
+  /**
+  * Get all opts (defaults). Currently only used for templates
+  *
+  * @return opts object
+  */
   getOpts() {
     return {templates:this.templates.opt};
   }
 
+  /**
+  * Set opts.
+  *
+  * @param object An object to merge into the defaults
+  * @return none
+  */
   setOpts(o) {
     if ('templates' in o)
       Hive.Visualization.mergeDeep(this.templates.opt, o.templates);
   }
 
+  /**
+  * Get renderer instantiation.
+  *
+  * @return renderer instantiation
+  */
   getRenderer(){
     return this.tk.element.renderer
   }
 
+  /**
+  * Get data object
+  *
+  * @return data config
+  */
   getData(){
     return this.tk.data.cfg;
   }
 
+  /**
+  * Get data config
+  *
+  * @return config data section
+  */
   getDataCfg(){
     return this.v.data;
   }
 
+  /**
+  * Get accessor config
+  *
+  * @return accessor config section
+  */
   getAccessorCfg(){
     return this.v.accessors;
   }
 
+  /**
+  * Get all scales
+  *
+  * @return scales object
+  */
   getScales(){
     return this.tk.accessors.scaleDict;
   }
 
+  /**
+  * Get draw config
+  *
+  * @return draw config section
+  */
   getDrawCfg(){
     return this.v.draw;
   }
 
+  /**
+  * Get accessors from a draw directive
+  *
+  * @param object Draw directive index
+  * @return accessors
+  */
   getAccessor(num) {
     return this.tk.draw.pluginState.sa[num];
   }
 
+  /**
+  * Get a template node from config
+  *
+  * @param object node selector
+  * @return node
+  */
   getFrame(f){
     return Hive.templates.getCfgNode(this.v.frames, f);
-    // return this.tk.frames.getNode(f);
   }
 
+  /**
+  * Get draw config
+  *
+  * @return draw config section
+  */
   getDraw() {
     return this.v.draw;
   }
@@ -206,6 +295,7 @@ Hive.Visualization = class extends Hive.Object {
   *
   * @param object Keys of objects in the config
   * @param object Array of promises
+  * @param object Utility Functions
   * @return none
   */
 	async bootstrap(keys, promises, handlers) {
@@ -287,6 +377,14 @@ Hive.Visualization = class extends Hive.Object {
       this.rendererObj.redraw();
   }
 
+  /**
+  * Looks at a scaled accesor range and
+  * returns a gradient object
+  *
+  * @param object Scaled accessor key
+  * @param boolean Visualization config
+  * @return a gradient object
+  */
   static genGradientFromSA(sa, cfg) {
     if (!cfg) cfg = this.v;
 
@@ -299,6 +397,11 @@ Hive.Visualization = class extends Hive.Object {
     return range.map(d => {return {'stop-color':d}});
   }
 
+  /**
+  * Download an SVG
+  *
+  * @return none
+  */
   export() {
     this.tk.element.export();
   }

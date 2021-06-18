@@ -8,6 +8,12 @@ import PubSub  from 'pubsub-js'
 
 Hive.Element = class {
 
+  /**
+  * Initialize locals
+  *
+  * @param object Functions from core
+  * @return none
+  */
   constructor(handlers) {
     this.h = handlers;
     this.events = [];
@@ -113,11 +119,21 @@ Hive.Element = class {
       }
   }
 
+  /**
+  * Debouncer for resize events.  Prevents event flooding.
+  *
+  * @return none
+  */
   resizeDebounce() {
     clearTimeout(this.resizeTimer);
     this.resizeTimer = setTimeout(this.resize.bind(this), 10);
   }
 
+  /**
+  * Resize handler for the HTML element.
+  *
+  * @return none
+  */
   resize() {
     let tsz = this.renderer.getTargetSize();
     this.viewBox[2]=tsz.w;
@@ -149,18 +165,41 @@ Hive.Element = class {
     this.events.push({...item, ...p});
   }
 
+  /**
+  * Gets the element that is drawn to. Currently either canvas or svg.
+  *
+  * @return HTML element
+  */
   getElement() {
     return this.renderer.drawableElement;
   }
 
+  /**
+  * Subscribe to a message.
+  *
+  * @param object varargs
+  * @return none
+  */
   messageSub(d) {
     PubSub.subscribe(...arguments);
   }
 
+  /**
+  * Publish to a message.
+  *
+  * @param object varargs
+  * @return none
+  */
   messagePub(d) {
     PubSub.publish(...arguments);
   }
 
+  /**
+  * Render an svg
+  *
+  * @param object SVG element
+  * @return none
+  */
   render(svg) { // call renderer w result
     svg.setAttribute('viewBox', this.viewBox.join(' '))
     console.log(svg);
@@ -180,10 +219,19 @@ Hive.Element = class {
     this.events = [];
   }
 
+  // Deprocated
   getTextWidth(text){
     return this.renderer.getTextWidth.bind(this.renderer)(text);
   }
 
+  /**
+  * Get positioning information for an element.
+  *
+  * @param string group id
+  * @param string element id
+  * @param boolean If alt points should be used
+  * @return position information
+  */
   getElementPosition(gid, eid, alt){
     return this.renderer.getPosition.bind(this.renderer)(gid, eid, alt);
   }

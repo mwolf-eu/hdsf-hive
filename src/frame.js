@@ -3,6 +3,15 @@
 import "./templates.js"
 
 Hive.Frames = class {
+
+  /**
+  * Initialize locals
+  *
+  * @param object Functions from core
+  * @param object frame configuration
+  * @param object precalculated template information (optional)
+  * @return none
+  */
   constructor(handlers, cfg, calculated) {
     this.h = handlers;
 
@@ -28,35 +37,59 @@ Hive.Frames = class {
     }).bind(this), false);
   }
 
-  // entry point
+  /**
+  * Gets size, layout information and starts a draw.
+  * Since any accessor can be used in any frame, the range is deferred until the plugin runs.
+  *
+  * @param object The accessor cfg
+  * @return none
+  */
   entry(cfg) {
     let container = this.h.getSize();
     this.flex.postMessage(['resize', [cfg, this.nodes, container.w, container.h]]);
     console.log(cfg);
   }
 
+  /**
+  * Flex handler callback when a node geometry changes.
+  *
+  * @param object Frame id
+  * @param object frame dataset
+  * @param object user information
+  * @return none
+  */
   updateNodeData(id,d,u) {
     this.h.sendStateChange('FRAME_CHANGED',id,d,u);
   }
 
-  // return msg w resolved nodes
+  /**
+  * Flex handler callback when a full layout is calculated.
+  *
+  * @param object Node objects w geometry, etc.
+  * @param object Array of node order
+  * @return none
+  */
   updateNodes(nodes, nodeOrder) {
     this.nodes = nodes;
-    // THIS IS BAD - Will force all size changes to be rendered twice
-    // this.h.getFixups().forEach((f, i) => {
-    //   let val = this.resolveNode(f.src)[`bbox.${f.sDim}`];
-    //   // let dst = this.resolveNode(f.dst)
-    //   this.h.getFrame('guide-right').attr['margin edge-top'] = val;
-    //   // dst[`translate.${f.dDim}`] = val;
-    // });
 
     this.h.draw();
   }
 
+  /**
+  * Kill the layout worker
+  *
+  * @return none
+  */
   destroy() {
     this.flex.terminate();
   }
 
+  /**
+  * Get a node geometry
+  *
+  * @param string node selector
+  * @return node
+  */
   resolveNode(sel) {
     let n = this.getNode(sel)
 
@@ -69,6 +102,12 @@ Hive.Frames = class {
       rotate:opt.rotate||0, mirror:opt.mirror||false, crop:opt.crop||false};
   }
 
+  /**
+  * Get a node config
+  *
+  * @param string node selector
+  * @return node
+  */
   getNode(sel) {
     // Clean up the selector
     // supports: " " == nested, ">" == direct child

@@ -1,5 +1,11 @@
 Hive.Text = class Text {
 
+  /**
+  * Convert dashes and underbars to camel-case
+  *
+  * @param string snake string
+  * @return camel string
+  */
   static snakeToCamel (str) {
     return str.replace(/([-_][a-z])/g,
       (group) => group.toUpperCase()
@@ -8,6 +14,15 @@ Hive.Text = class Text {
                   );
   }
 
+  /**
+  * Attach a block of text to an anchor point and set position modifiers
+  *
+  * @param object Text lines and their metrics
+  * @param number Max width of all lines
+  * @param number height of a single line
+  * @param object text formatting config
+  * @return none
+  */
   static reposition(lines, w, sh, cfg) { // set the abs position of text
     let xOff = 0, yOff = 0;
     let h = sh * lines.length;
@@ -79,6 +94,14 @@ Hive.Text = class Text {
     });
   }
 
+  /**
+  * Truncates text and adds ... to the end.
+  *
+  * @param object line of text
+  * @param number line width
+  * @param object line attributes
+  * @return none
+  */
   static ellipseize (line, w, attr) {
     let lineWidth = measureText([line.text + '...'], attr)[0].width;
 
@@ -100,6 +123,14 @@ Hive.Text = class Text {
 
   // ALL font-* attrs that affect size must be applied to the text element directly
   // as window.getComputedStyle() will not work if the SVG never hits the DOM.
+
+  /**
+  * Formats input text
+  *
+  * @param string text
+  * @param number text configuration
+  * @return text object with metrics
+  */
   static format (content, cfg) {
     let defs = {
       x:0,
@@ -151,7 +182,13 @@ Hive.Text = class Text {
     return ({maxWidth, lines, e, bbox:{w:rv[0].width, h:singleHeight*lines.length}});
   }
 
-  // integration w Hive
+  /**
+  * Formats the text of an SVG.  Removes existing text, inserts new formatted text.
+  *
+  * @param object HTML text element
+  * @param number text configuration
+  * @return formatted text metrics
+  */
   static replace(e, cfg) {
     // resolve w/h units
     ['height', 'width'].forEach((param, i) => {
@@ -184,7 +221,6 @@ Hive.Text = class Text {
     });
 
     cfg = {...def, ...cfg.text, attr};
-
 
     let rv = this.format(content, cfg);
     rv.e.setAttribute('id', id);

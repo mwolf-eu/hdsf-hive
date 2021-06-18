@@ -1,22 +1,29 @@
 "use strict";
 
-// Templates are html flex-line templates to control layout of graphical elements.
-// The flex worker which resolves the config into x/y/h/w/etc. is running in another
-// thread.  As with html flex, there is a root node which contains nested children
-// ad-nauseum. In addition to flex properties, this implementation contains per-
-// node opt, and handlers.
-//
-// Opt contains user attached data which it delivers in a callback whenever a specific
-// node resizes.
-//
-// Handlers contains directives on how to RELATIVELY modify the template when a property
-// changes.  Eg: Account for a shift in title centering when the left axis grows.  While
-// it makes the overall template more cumbersome, it elides the need for two flex
-// reflows per viewport change. Eg: Reflow to get the width of the left axis, apply
-// it the title left margin, and reflow again.
+/*
+*  Templates are html flex-line templates to control layout of graphical elements.
+*  The flex worker which resolves the config into x/y/h/w/etc. is running in another
+*  thread.  As with html flex, there is a root node which contains nested children
+*  ad-nauseum. In addition to flex properties, this implementation contains per-
+*  node opt, and handlers.
+*
+*  Opt contains user attached data which it delivers in a callback whenever a specific
+*  node resizes.
+*
+*  Handlers contains directives on how to RELATIVELY modify the template when a property
+*  changes.  Eg: Account for a shift in title centering when the left axis grows.  While
+*  it makes the overall template more cumbersome, it elides the need for two flex
+*  reflows per viewport change. Eg: Reflow to get the width of the left axis, apply
+*  it the title left margin, and reflow again.
+*/
 
 Hive.templates = class {
 
+  /**
+  * Initialize locals and template opts
+  *
+  * @return none
+  */
   constructor() {
 
     // primitive opts for this module
@@ -76,20 +83,25 @@ Hive.templates = class {
     });
   }
 
-  // clone & mask a template object
+  /**
+  * Clone & mask a template object
+  *
+  * @param object existing object
+  * @param object new object to merge into existing
+  * @return merged object
+  */
   clone (branch, layer) {
     let obj = JSON.parse(JSON.stringify(branch));
     return Hive.Object.mergeDeep(obj, layer);
   }
 
-  // getFixups() {
-  //   return this.fixups;
-  // }
-  //
-  // setFixups(val) {
-  //   this.fixups = val;
-  // }
-
+  /**
+  * Get node from a template config
+  *
+  * @param object template object
+  * @param object node selector
+  * @return config node
+  */
   static getCfgNode(cfg, sel) {
     let byID = [];
     let getIDs  = function(cfg, pid) {
@@ -123,14 +135,25 @@ Hive.templates = class {
     // return cfg;
   }
 
+  /**
+  * Get options
+  *
+  * @param object template config
+  * @return cloned template config
+  */
   resolveOpt (cfg) {
     let c = this.clone(this.opt, cfg||{});
     if (c.prefix.length && !c.prefix.endsWith('-')) c.prefix += '-';
     return  c;
   }
 
-  // applyFlexAttr(cfg, node){}
 
+  /**
+  * Get basic template with right & bottom guides
+  *
+  * @param object template config options
+  * @return template
+  */
   basic(cfg) {
     let o = this.resolveOpt(cfg);
     let c = o.basic
@@ -168,6 +191,14 @@ Hive.templates = class {
       return template;
     }
 
+    /**
+    * Get template with quadrants
+    * This is often used for polar charts where the top right quadrant selector
+    * & origin is used and the chart spans clockwise into the -x,-y domains.
+    *
+    * @param object template config options
+    * @return template
+    */
     quadrants(cfg) {
       let o = this.resolveOpt(cfg);
       let c = o.chart;
@@ -188,6 +219,14 @@ Hive.templates = class {
       return template;
     }
 
+    /**
+    * Get chart template with axes, & axes labels
+    * This is often used for polar charts where the top right quadrant selector
+    * & origin is used and the chart spans clockwise into the -x,-y domains.
+    *
+    * @param object template config options
+    * @return template
+    */
     chart(cfg) {
       let o = this.resolveOpt(cfg);
       let c = o.chart;

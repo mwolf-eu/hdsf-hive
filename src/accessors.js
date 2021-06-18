@@ -1,9 +1,16 @@
 Hive.Accessors = class {
 
+  /**
+  * Initialize locals
+  *
+  * @param object Functions from core
+  * @return none
+  */
   constructor(handlers) {
     this.h = handlers;
-    this.generated = {accessors:{}};
+    this.generated = {accessors:{}}; // generated accessors
   }
+
   /**
   * Creates a scale for each accessor object in cfg and adds it to the scaleDict obj.
   * Since any accessor can be used in any frame, the range is deferred until the plugin runs.
@@ -43,14 +50,11 @@ Hive.Accessors = class {
   * Parse the accessor section, resolve the scales with the local frame sizes,
   * and return the set of functions for all plugin config fields requested.
   *
-  * @param object The frame relative sizes
-  * @param array The list of cfg fields to resolve
-  * @param object The plugin cfg
-  * @param object The plugin data to calculate the domain (to be deprocated)
+  * @param object Draw attribute and accessor pairs
+  * @param object Bbox stats
+  * @param array  Draw data
   * @return An object containing the accessor functions
   */
-
-  // getScaledAccessors(relKeys, complexKeys, cfg, data) {
   getScaledAccessors(keyPairs, relKeys, data) {
     let saDict = {}; // finalized scaled accessors
     let continuousDomains =
@@ -218,10 +222,23 @@ Hive.Accessors = class {
     return saDict;
   }
 
+  /**
+  * Return a scale.
+  *
+  * @param object Scale key
+  * @return A scale
+  */
   getScale(n) {
     return this.scaleDict[n];
   }
 
+  /**
+  * Print a warning if an extent is derived at run-time.
+  *
+  * @param object Scale key
+  * @param object Derived extent
+  * @return none
+  */
   warnExtent(field, ext) {
     this.h.warn(`Speed-up! Set the "${field}" domain to: ${JSON.stringify(ext)}!`)
   }

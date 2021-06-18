@@ -1,4 +1,12 @@
 Hive.Data = class {
+
+  /**
+  * Initialize locals
+  *
+  * @param object Functions from core
+  * @param object Data config section
+  * @return none
+  */
   constructor(h, cfg) {
     this.h = h;
 
@@ -20,6 +28,7 @@ Hive.Data = class {
       }
     });
   }
+
   /**
   * Parses the data array.  This is a stub for future addons which may include:
   * Getting data from urls
@@ -32,6 +41,11 @@ Hive.Data = class {
     // promises are made in constructor
   }
 
+  /**
+  * Returns the dataset promises, if any.
+  *
+  * @return dataset promises
+  */
   getPromises() {
     return this.promises;
   }

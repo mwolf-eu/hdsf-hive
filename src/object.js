@@ -1,31 +1,28 @@
-/*
-
- +-+-+-+-+-+-+-+
- |H|A|R|V|E|S|T|
- +-+-+-+-+-+-+-+
-
- The Analytics & Visualization Toolkit
-*/
-
 "use strict";
 
 // node or frontend
 (global||globalThis).Hive = globalThis.Hive||{Type:{}, templatePlugins:[], Plugins:{}, Renderer:{}}
 
 export let Hive = globalThis.Hive;
-
 Hive.Object = class  {
+
+  /**
+  * Initialize locals
+  *
+  * @return none
+  */
   constructor() {
     Hive.systemOpts = {};
 
-    Hive.setOpt = function (path, val) {
-      path.opt = val
-    }
-
-    Hive.getOpt = function (path) {
-      return path.opt
-    }
+    // Hive.setOpt = function (path, val) {
+    //   path.opt = val
+    // }
+    //
+    // Hive.getOpt = function (path) {
+    //   return path.opt
+    // }
   }
+
 	/**
   * Writes text to console pending config log level
   *
@@ -77,6 +74,12 @@ Hive.Object = class  {
       });
   }
 
+	/**
+  * converts chars to hex codes
+  *
+  * @param string string object
+  * @return string of hex
+  */
   utf8ToHex(str) {
     return Array.from(str).map(c =>
       c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) :
@@ -84,6 +87,12 @@ Hive.Object = class  {
     ).join('');
   }
 
+	/**
+  * converts hex to a string
+  *
+  * @param string hex string
+  * @return decoded string
+  */
   hexToUtf8(hex) {
     return decodeURIComponent('%' + hex.match(/.{1,2}/g).join('%'));
   }
