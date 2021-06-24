@@ -270,6 +270,16 @@ Hive.Visualization = class extends Hive.Object {
   }
 
   /**
+  * Set draw config
+  * @param array draw directives
+  *
+  * @return none
+  */
+  setDraw(d) {
+    this.v.draw = d;
+  }
+
+  /**
   * Get defaults for the config root
   *
   * @param object The incomplete user specified cfg
@@ -329,53 +339,57 @@ Hive.Visualization = class extends Hive.Object {
     this.sendStateChange('PARSE_CFG_END', this);
 	}
 
-  /**
-  * Returns the current config
-  *
-  * @return the config
-  */
-  getConfig() {
-    return this.v;
+  redraw() {
+    this.tk.element.resize();
   }
+  // TEST BEFORE ENABLING
+  // /**
+  // * Returns the current config
+  // *
+  // * @return the config
+  // */
+  // getConfig() {
+  //   return this.v;
+  // }
+  //
+  // /**
+  // * Sets a new configuration
+  // *
+  // * @param object The new cfg
+  // * @return none
+  // */
+  // setConfig(cfg) {
+  //   this.v = cfg;
+  //   this.accessors(cfg.accessors);
+  //   this.rendererObj.redraw();
+  // }
 
-  /**
-  * Sets a new configuration
-  *
-  * @param object The new cfg
-  * @return none
-  */
-  setConfig(cfg) {
-    this.v = cfg;
-    this.accessors(cfg.accessors);
-    this.rendererObj.redraw();
-  }
-
-  /**
-  * Merge data into an existing config
-  * This assumes unique id's which don't conflict
-  *
-  * @param object The new cfg
-  * @param boolean If the new config should trigger a redraw
-  * @return none
-  */
-  // merge accessors, frames, data, draw
-  // assumes unique id's don't conflict
-  mergeConfig(newCfg, update=true) {
-    let mergeObjs = ['accessors','frames','data','draw'];
-    mergeObjs.forEach((o, i) => {
-      if (! newCfg[o]) return;
-      if (Array.isArray(this.v[o]))
-        this.v[o] = [...this.v[o], ...newCfg[o]];
-      else
-        this.v[o] = {...this.v[o], ...newCfg[o]};
-    });
-
-    this.v = this.resolveCfg(this.v);
-
-    this.accessors(this.v.accessors);
-    if(update)
-      this.rendererObj.redraw();
-  }
+  // /**
+  // * Merge data into an existing config
+  // * This assumes unique id's which don't conflict
+  // *
+  // * @param object The new cfg
+  // * @param boolean If the new config should trigger a redraw
+  // * @return none
+  // */
+  // // merge accessors, frames, data, draw
+  // // assumes unique id's don't conflict
+  // mergeConfig(newCfg, update=true) {
+  //   let mergeObjs = ['accessors','frames','data','draw'];
+  //   mergeObjs.forEach((o, i) => {
+  //     if (! newCfg[o]) return;
+  //     if (Array.isArray(this.v[o]))
+  //       this.v[o] = [...this.v[o], ...newCfg[o]];
+  //     else
+  //       this.v[o] = {...this.v[o], ...newCfg[o]};
+  //   });
+  //
+  //   this.v = this.resolveCfg(this.v);
+  //
+  //   this.accessors(this.v.accessors);
+  //   if(update)
+  //     this.rendererObj.redraw();
+  // }
 
   /**
   * Looks at a scaled accesor range and
