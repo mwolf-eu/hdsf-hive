@@ -52,7 +52,7 @@ Hive.Plugins.binhex = class {
   static getDefaults() {
     return {
           frame:'chart center-container > view', radius:10, attr:{
-            color:"fill", stroke:"rgb(0,0,0)", 'stroke-width':.5
+            fill:"blue", stroke:"rgb(0,0,0)", 'stroke-width':.5
           },
           opt:{clip:true}
         }

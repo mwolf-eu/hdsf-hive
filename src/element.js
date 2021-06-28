@@ -141,6 +141,10 @@ Hive.Element = class {
 
     this.renderer.setRendererSize(this.container.clientWidth, this.container.clientHeight);
 
+    // Some plugins need event refreshes bc the number of elements changes. Eg: binhex
+    if (this.popup) 
+      this.popup.events = this.events;
+
     // dom resize and svg redraw are orthogonal when renderer == three
     if (this.cfg.renderer.name != 'three')
       this.h.frames(); // rerun frames & draw
